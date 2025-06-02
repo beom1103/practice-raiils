@@ -1,8 +1,183 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+require:
+  - standard
+  - standard-rails
+  - standard-performance
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-factory_bot
+  - rubocop-rspec
+  - rubocop-capybara
 
-# Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+inherit_gem:
+  pundit: config/rubocop-rspec.yml
+  rswag-specs: .rubocop_rspec_alias_config.yml
+  standard: config/base.yml
+  standard-rails: config/base.yml
+
+AllCops:
+  Exclude:
+    - node_modules/**/*
+    - public/**/*
+    - db/**/*
+    - spec/runners/**/*
+    - spec/support/elasticsearch.rb
+    - spec/support/fake_vimeo_api.rb
+    - spec/response_validation_helper.rb
+    - app/jobs/migrations/**/*.rb
+    - vendor/bundle/**/*
+    - tmp/**/*
+  NewCops: disable
+
+Layout/ArgumentAlignment:
+  Enabled: true
+  EnforcedStyle: with_first_argument
+
+Layout/ArrayAlignment:
+  Enabled: true
+  EnforcedStyle: with_first_element
+
+Layout/EndAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: keyword
+  Severity: warning
+
+Layout/LineLength:
+  Enabled: true
+  Max: 120
+  Exclude:
+    - bin/bundle
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: aligned
+
+Layout/ParameterAlignment:
+  Enabled: true
+  EnforcedStyle: with_first_parameter
+
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: true
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: no_space
+
+Style/ArgumentsForwarding:
+  Enabled: true
+  UseAnonymousForwarding: false
+
+Style/RescueStandardError:
+  Enabled: true
+  EnforcedStyle: explicit
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: single_quotes
+
+# $redis에서 사용
+Style/GlobalVars:
+  Enabled: true
+  AllowedVariables:
+    - $redis
+    - $minerva_redis
+    - $redis_for_code_runner
+    - $redis_for_sql_runner
+    - $redis_for_project_runner
+    - $redis_for_gitter
+    - $redis_for_stats
+    - $redis_for_flipper
+    - $hackle_client
+
+# Rails
+Rails/ApplicationController:
+  Exclude:
+    - app/controllers/static_controller.rb
+
+Rails/EnvironmentVariableAccess:
+  Enabled: false
+
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: false
+
+# RSpec은 standard gem에서 지원하지 않아서 별도로 지정합니다.
+RSpec/AnyInstance:
+  Exclude:
+    - spec/support/channel_helper.rb
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Exclude:
+    - spec/result_sanitizers/**/*.rb
+
+RSpec/DescribedClass:
+  EnforcedStyle: explicit
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - spec/factories/**/*.rb
+
+RSpec/ExampleLength:
+  Max: 20
+  CountAsOne: [ 'array', 'hash', 'heredoc' ]
+  Exclude:
+    - spec/services/banners/list_service_spec.rb
+    - spec/models/learn/lesson_spec.rb
+    - spec/features/make_challenge_algorithm_spec.rb
+    - spec/controllers/api/v1/assess/tests/exports_controller_spec.rb
+    - spec/requests/api/v1/school/code_reviews_controller_spec.rb
+    - spec/requests/api/v1/school/code_review_comments_controller_spec.rb
+    - spec/workers/assigments/evaluate_web_worker_spec.rb
+
+RSpec/ExpectChange:
+  EnforcedStyle: block
+
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - spec/controllers/admin/**/*.rb
+
+RSpec/ImplicitSubject:
+  EnforcedStyle: single_statement_only
+
+RSpec/MissingExampleGroupArgument:
+  Exclude:
+    - spec/factories/**/*.rb
+
+RSpec/MultipleExpectations:
+  Max: 5
+  Exclude:
+    - spec/requests/api/v1/school/code_reviews_controller_spec.rb
+    - spec/requests/api/v1/school/code_review_comments_controller_spec.rb
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 15
+  Exclude:
+    - spec/app/lib/aws_client_spec.rb
+
+RSpec/NestedGroups:
+  Max: 6
+  Exclude:
+    - spec/services/job_positions/list_service_spec.rb
+    - spec/services/create_application_service_spec.rb
+
+RSpec/ScatteredSetup:
+  Exclude:
+    - spec/requests/api/v1/ai/skill_report_total_dists_spec.rb
+
+RSpec/VariableName:
+  AllowedPatterns:
+    - ^Authorization
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
+
+# FactoryBot
+# standard 젬에서 지원하지 않아서 수동으로 설정
+FactoryBot/ConsistentParenthesesStyle:
+  Enabled: true
+
+FactoryBot/SyntaxMethods:
+  Enabled: true
